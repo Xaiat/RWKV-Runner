@@ -36,7 +36,7 @@ sleep 1
 # List all model files
 # 列出所有模型文件
 echo "Available models:"
-model_files=(/root/RWKV-Runner/models/*.pth)
+model_files=(/root/Models/*.pth)
 for i in "${!model_files[@]}"; do
     echo "$((i+1))) ${model_files[$i]}"
 done
