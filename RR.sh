@@ -62,7 +62,7 @@ if [[ $model_choice -ge 0 && $model_choice -lt ${#model_files[@]} ]]; then
       -d "{
       \"customCuda\": false,
       \"deploy\": false,
-      \"model\": \"models/$selected_model\",
+      \"model\": \"/root/Models/$selected_model\",
       \"strategy\": \"cuda fp16\",
       \"tokenizer\": \"\"
     }"
