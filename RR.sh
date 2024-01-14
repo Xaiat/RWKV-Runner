@@ -4,6 +4,12 @@
 # 模型文件目录路径
 #!/bin/bash
 
+#!/bin/bash
+
+# Change the current working directory to the directory where the script is located
+# 将当前工作目录更改为脚本所在的目录
+cd "$(dirname "$0")"
+
 # Start RWKV-Runner service script 
 # 启动 RWKV-Runner 服务的脚本
 echo "Starting RWKV-Runner service..."
@@ -26,7 +32,7 @@ conda activate RWKV-Runner
 
 # Run RWKV-Runner service
 # 运行 RWKV-Runner 服务
-cd /root/RWKV-Runner/ && python3 /root/RWKV-Runner/backend-python/main.py --host 0.0.0.0 --webui &
+python3 ./backend-python/main.py --host 0.0.0.0 --webui &
 echo "RWKV-Runner is starting......"
 
 # Wait for 1 second to make sure the service has started 
@@ -36,7 +42,7 @@ sleep 1
 # List all model files
 # 列出所有模型文件
 echo "Available models:"
-model_files=(/root/Models/*.pth)
+model_files=(../Models/*.pth)
 for i in "${!model_files[@]}"; do
     echo "$((i+1))) ${model_files[$i]}"
 done
@@ -62,7 +68,7 @@ if [[ $model_choice -ge 0 && $model_choice -lt ${#model_files[@]} ]]; then
       -d "{
       \"customCuda\": false,
       \"deploy\": false,
-      \"model\": \"/root/Models/$selected_model\",
+      \"model\": \"../Models/$selected_model\",
       \"strategy\": \"cuda fp16\",
       \"tokenizer\": \"\"
     }"
