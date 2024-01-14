@@ -73,4 +73,4 @@ fi
 
 # Show the service is started successfully
 # 显示服务已经启动成功 
-echo -e "RWKV-Runner started.\n\nhttp://192.168.1.15:8000 for LAN\n\nhttp://cgxcgx.com:54321 for WAN\n"
+echo -e "\nRWKV-Runner started.\n\nhttp://192.168.1.15:8000 for LAN\n\nhttp://cgxcgx.com:54321 for WAN\n"
