@@ -26,7 +26,7 @@ conda activate RWKV-Runner
 
 # Run RWKV-Runner service
 # 运行 RWKV-Runner 服务
-python3 ./backend-python/main.py --host 0.0.0.0 --webui &
+python3 /root/RWKV-Runner/backend-python/main.py --host 0.0.0.0 --webui &
 echo "RWKV-Runner is starting......"
 
 # Wait for 1 second to make sure the service has started 
