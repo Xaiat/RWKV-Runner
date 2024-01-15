@@ -4,8 +4,6 @@
 # 模型文件目录路径
 #!/bin/bash
 
-#!/bin/bash
-
 # Change the current working directory to the directory where the script is located
 # 将当前工作目录更改为脚本所在的目录
 cd "$(dirname "$0")"
