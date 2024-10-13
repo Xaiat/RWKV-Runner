@@ -43,7 +43,7 @@ jobs:
           ref: master
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.22.5"
+          go-version: "1.20.5"
       - uses: actions/setup-python@v5
         id: cp310
         with:
@@ -51,6 +51,9 @@ jobs:
       - uses: crazy-max/ghaction-chocolatey@v3
         with:
           args: install upx
+      - uses: crazy-max/ghaction-chocolatey@v3
+        with:
+          args: install nsis
       - run: |
           Start-BitsTransfer https://github.com/josStorer/ai00_rwkv_server/releases/latest/download/webgpu_server_windows_x86_64.exe ./backend-rust/webgpu_server.exe
           Start-BitsTransfer https://github.com/josStorer/web-rwkv-converter/releases/latest/download/web-rwkv-converter_windows_x86_64.exe ./backend-rust/web-rwkv-converter.exe
@@ -69,10 +72,11 @@ jobs:
           del ./backend-python/rwkv_pip/cpp/librwkv.so
           (Get-Content -Path ./backend-golang/app.go) -replace "//go:custom_build windows ", "" | Set-Content -Path ./backend-golang/app.go
           (Get-Content -Path ./backend-golang/utils.go) -replace "//go:custom_build windows ", "" | Set-Content -Path ./backend-golang/utils.go
+          go install mvdan.cc/garble@v0.10.1
           make
           Rename-Item -Path "build/bin/RWKV-Runner.exe" -NewName "RWKV-Runner_windows_x64.exe"
 
-      - run: gh release upload ${{github.ref_name}} build/bin/RWKV-Runner_windows_x64.exe
+      - run: gh release upload ${{github.ref_name}} build/bin/RWKV-Runner_windows_x64.exe build/bin/RWKV-Runner-amd64-installer.exe
 
   linux:
     runs-on: ubuntu-20.04
@@ -83,7 +87,7 @@ jobs:
           ref: master
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.22.5"
+          go-version: "1.20.5"
       - run: |
           wget https://github.com/josStorer/ai00_rwkv_server/releases/latest/download/webgpu_server_linux_x86_64 -O ./backend-rust/webgpu_server
           wget https://github.com/josStorer/web-rwkv-converter/releases/latest/download/web-rwkv-converter_linux_x86_64 -O ./backend-rust/web-rwkv-converter
@@ -98,6 +102,7 @@ jobs:
           rm ./backend-python/rwkv_pip/cpp/librwkv.dylib
           rm ./backend-python/rwkv_pip/cpp/rwkv.dll
           rm ./backend-python/rwkv_pip/webgpu/web_rwkv_py.cp310-win_amd64.pyd
+          go install mvdan.cc/garble@v0.10.1
           make
           mv build/bin/RWKV-Runner build/bin/RWKV-Runner_linux_x64
 
@@ -112,7 +117,7 @@ jobs:
           ref: master
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.22.5"
+          go-version: "1.20.5"
       - run: |
           wget https://github.com/josStorer/ai00_rwkv_server/releases/latest/download/webgpu_server_darwin_aarch64 -O ./backend-rust/webgpu_server
           wget https://github.com/josStorer/web-rwkv-converter/releases/latest/download/web-rwkv-converter_darwin_aarch64 -O ./backend-rust/web-rwkv-converter
@@ -124,12 +129,14 @@ jobs:
           rm ./backend-python/rwkv_pip/cpp/rwkv.dll
           rm ./backend-python/rwkv_pip/cpp/librwkv.so
           rm ./backend-python/rwkv_pip/webgpu/web_rwkv_py.cp310-win_amd64.pyd
+          go install mvdan.cc/garble@v0.10.1
           make
           cp build/darwin/Readme_Install.txt build/bin/Readme_Install.txt
           cp build/bin/RWKV-Runner.app/Contents/MacOS/RWKV-Runner build/bin/RWKV-Runner_darwin_universal
           cd build/bin && zip -r RWKV-Runner_macos_universal.zip RWKV-Runner.app Readme_Install.txt
+          cd ../../frontend && zip -r html-webui.zip dist
 
-      - run: gh release upload ${{github.ref_name}} build/bin/RWKV-Runner_macos_universal.zip build/bin/RWKV-Runner_darwin_universal
+      - run: gh release upload ${{github.ref_name}} build/bin/RWKV-Runner_macos_universal.zip frontend/html-webui.zip
 
   publish-release:
     runs-on: ubuntu-22.04
